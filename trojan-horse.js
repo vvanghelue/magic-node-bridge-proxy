@@ -3,6 +3,8 @@ const fetch = require('node-fetch')
 const bridgeServerUrl = process.env.BRIDGE_PROXY_URL || 'http://localhost:5099'
 const mirroredEndpoint = process.env.MIRRORED_ENDPOINT_URL || 'http://real-endpoint.local'
 
+const SYNC_INTERVAL = 500 // ms
+
 const loop = (async () => {
 	const res = await fetch(`${bridgeServerUrl}/spy/requests_to_process`)
 	const requestsToProcess = await res.json()
@@ -52,3 +54,5 @@ const loop = (async () => {
 	setTimeout(loop, 500)
 })
 loop()
+
+console.log(`Server started, syncing every ${SYNC_INTERVAL} ms`)
