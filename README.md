@@ -11,12 +11,19 @@ node bridge-server.js
 
 
 Install project on the private network (must have access to public bridge server)
+
 ```
 npm install
 ```
-then
+then :
+
 ```
 BRIDGE_PROXY_URL=https://bridge-server-instance.com node private-network-worker.js 
+```
+
+on windows:
+```
+set BRIDGE_PROXY_URL=https://bridge-server-instance.com && node private-network-worker.js
 ```
 
 
@@ -33,6 +40,7 @@ curl --header "Content-Type: application/json" \
   --data '{"username":"xyz","password":"xyz"}' \
   https://bridge-server-instance.com/http://website.com/some/form
 ```
+
 
 
 
