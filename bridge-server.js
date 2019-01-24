@@ -1,4 +1,5 @@
 const express = require('express')
+const querystring = require('querystring')
 
 const app = express()
 app.use((req, res, next) => {
@@ -18,6 +19,7 @@ const getRandomId = () => Math.round(Math.random() * 999999999999)
 
 const createRequestRequest = ({ request, callback }) => {
 	// console.log(request.body)
+	const queryString = request.query ? ('?' + querystring.stringify(request.query)) : ''
 
 	return {
 		id: getRandomId(),
@@ -25,7 +27,7 @@ const createRequestRequest = ({ request, callback }) => {
 		status: 'to_process', // processing
 		requestData: {
 			method: request.method,
-			path: request.originalUrl,
+			url: `${request.path.substr(1)}${queryString}`,
 			headers: request.headers,
 			body: request.body
 		}
@@ -88,19 +90,19 @@ app.use((req, res, next) => {
 		return
 	}
 
-	if (req.originalUrl == '/spy/debug') {
+	if (req.originalUrl == '/debug') {
 		res.json(requestManager.getAll())
 		return
 	}
 
-	if (req.originalUrl == '/spy/requests_to_process') {
+	if (req.originalUrl == '/requests_to_process') {
 		res.json(requestManager.getRequestsToProcess())
 		requestManager.setAllAsProcessing()
 		return
 	}
 
-	if (req.originalUrl == '/spy/on_request_processed') {
-		// console.log(req.body)
+	if (req.originalUrl == '/on_request_processed') {
+		console.log(req.body)
 
 		const body = JSON.parse(req.body)
 
@@ -137,6 +139,13 @@ app.use((req, res, next) => {
 
 	const callback = ({ headers, body }) => {
 		Object.keys(headers).forEach((k) => {
+			if (k == 'transfer-encoding') {
+				return
+			}
+			if (k == 'content-encoding') {
+				return
+			}
+			
 			res.set(k, headers[k])
 		})
 		res.send(body)
