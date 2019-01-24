@@ -16,7 +16,7 @@ npm install
 ```
 then
 ```
-BRIDGE_PROXY_URL=https://bridge-server-instance.com node trojan-horse.js 
+BRIDGE_PROXY_URL=https://bridge-server-instance.com node private-network-worker.js 
 ```
 
 
@@ -26,7 +26,7 @@ BRIDGE_PROXY_URL=https://bridge-server-instance.com node trojan-horse.js
 curl https://bridge-server-instance.com/https://api.github.com/users/vvanghelue
 ```
 
-Or posting data :
+You can post data too :
 ```
 curl --header "Content-Type: application/json" \
   --request POST \

@@ -13,7 +13,8 @@ const loop = (async () => {
 		requestsToProcess = await res.json()
 	} catch(err) {
 		console.log(`Error on reaching bridge server, retrying in two seconds`)
-		// console.log(err)
+		console.log(`Reason :`)
+		console.log(err)
 		setTimeout(loop, 2000)
 		return
 	}
@@ -27,12 +28,12 @@ const loop = (async () => {
 			const urlData = new URL(requestData.url)
 			requestData.headers.host = urlData.host
 
-			// console.log( 
-			// 	requestData.method, 
-			// 	requestData.url,
-			// 	requestData.headers, 
-			// 	requestData.body
-			// )
+			console.log( 
+				requestData.method, 
+				requestData.url,
+				requestData.headers, 
+				requestData.body
+			)
 
 			const result = await fetch(requestData.url, {
 				method: requestData.method,
