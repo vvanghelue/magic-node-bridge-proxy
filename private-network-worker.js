@@ -6,6 +6,9 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
 const SYNC_INTERVAL = 500 // ms
 
+
+console.log('Starting with bridge server : ' + bridgeServerUrl)
+
 const loop = (async () => {
 	let requestsToProcess
 	try {
