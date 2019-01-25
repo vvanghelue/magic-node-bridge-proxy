@@ -119,7 +119,7 @@ app.use((req, res, next) => {
 	}
 
 	if (req.originalUrl == '/debug') {
-		res.json(requestManager.getAll())
+		res.json(requestManager.getAll().reverse())
 		return
 	}
 
