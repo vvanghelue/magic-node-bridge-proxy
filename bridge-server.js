@@ -1,5 +1,6 @@
 const express = require('express')
 const querystring = require('querystring')
+const path = require('path')
 
 const app = express()
 app.use((req, res, next) => {
@@ -87,6 +88,24 @@ const requestManager = (() => {
 app.use((req, res, next) => {
 
 	if (req.originalUrl == '/favicon.ico') {
+		res.send('')
+		return
+	}
+
+	if (req.originalUrl == '/') {
+		res.send(`
+			if you want to run chrome worker inside private network,
+				you can do this here : <a href="/chrome-worker.html">chrome-worker.html</a>
+		`)
+		return
+	}
+	if (req.originalUrl == '/chrome-worker.html') {
+		res.sendFile(path.resolve(__dirname + '/chrome-worker.html'))
+		return
+	}
+
+	if (req.originalUrl == '/private-network-worker.js') {
+		res.sendFile(path.resolve(__dirname + '/private-network-worker.js'))
 		return
 	}
 
@@ -130,7 +149,7 @@ app.use((req, res, next) => {
 			.filter(r => r.id == body.id)[0]
 			.status = 'processed'
 
-		
+
 		res.set('Access-Control-Allow-Origin', '*')
 		res.send('ok')
 		return

@@ -5,7 +5,13 @@
 </head>
 <body>
 	<script type="text/javascript">
-		
+		document.addEventListener('worker-bridge-connected', () => {
+			document.body.innerHTML = '<div style="color: green;">worker-bridge-connected ✔️</div>'
+		})
+		document.addEventListener('worker-bridge-not-connected', () => {
+			document.body.innerHTML = '<div style="color: red;">worker-bridge-not-connected ❌</div>'
+		})
 	</script>
+	<script type="text/javascript" src="/private-network-worker.js"></script>
 </body>
 </html>

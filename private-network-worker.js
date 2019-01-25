@@ -1,17 +1,20 @@
-const IS_NODE = !!process
+const IS_NODE = typeof(process) !== "undefined"
 
 console.log(IS_NODE)
 
+let bridgeServerUrl
+
 if (IS_NODE) {
+	console.log("dqsdqs")
 	var fetch = require('node-fetch')
 	var URL = require('url')
-	var bridgeServerUrl = (process.env.BRIDGE_PROXY_URL || 'http://localhost:5099').trim()
+	bridgeServerUrl = (process.env.BRIDGE_PROXY_URL || 'http://localhost:5099').trim()
 	process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
+} else {
+	bridgeServerUrl = 'http://' + location.host
 }
 
-
 const SYNC_INTERVAL = 500 // ms
-
 
 console.log('Starting with bridge server : ' + bridgeServerUrl)
 
@@ -25,7 +28,19 @@ const loop = (async () => {
 		console.log(`Reason :`)
 		console.log(err)
 		setTimeout(loop, 2000)
+
+		if (!IS_NODE) {
+			document.dispatchEvent(
+				new CustomEvent('worker-bridge-not-connected')
+			)
+		}
 		return
+	}
+
+	if (!IS_NODE) {
+		document.dispatchEvent(
+			new CustomEvent('worker-bridge-connected')
+		)
 	}
 
 	for (request of requestsToProcess) {
@@ -77,7 +92,7 @@ const loop = (async () => {
 	}
 
 	// process.exit()
-	setTimeout(loop, 500)
+	setTimeout(loop, SYNC_INTERVAL)
 })
 loop()
 
