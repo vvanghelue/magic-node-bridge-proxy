@@ -1,8 +1,14 @@
-const fetch = require('node-fetch')
-const url = require('url')
+const IS_NODE = !!process
 
-const bridgeServerUrl = (process.env.BRIDGE_PROXY_URL || 'http://localhost:5099').trim()
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
+console.log(IS_NODE)
+
+if (IS_NODE) {
+	var fetch = require('node-fetch')
+	var URL = require('url')
+	var bridgeServerUrl = (process.env.BRIDGE_PROXY_URL || 'http://localhost:5099').trim()
+	process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
+}
+
 
 const SYNC_INTERVAL = 500 // ms
 

@@ -19,7 +19,7 @@ const getRandomId = () => Math.round(Math.random() * 999999999999)
 
 const createRequestRequest = ({ request, callback }) => {
 	// console.log(request.body)
-	const queryString = request.query ? ('?' + querystring.stringify(request.query)) : ''
+	const queryString = Object.keys(request.query).length > 0 ? ('?' + querystring.stringify(request.query)) : ''
 
 	return {
 		id: getRandomId(),
@@ -96,6 +96,7 @@ app.use((req, res, next) => {
 	}
 
 	if (req.originalUrl == '/requests_to_process') {
+		res.set('Access-Control-Allow-Origin', '*')
 		res.json(requestManager.getRequestsToProcess())
 		requestManager.setAllAsProcessing()
 		return
@@ -129,6 +130,8 @@ app.use((req, res, next) => {
 			.filter(r => r.id == body.id)[0]
 			.status = 'processed'
 
+		
+		res.set('Access-Control-Allow-Origin', '*')
 		res.send('ok')
 		return
 	}
@@ -145,7 +148,7 @@ app.use((req, res, next) => {
 			if (k == 'content-encoding') {
 				return
 			}
-			
+
 			res.set(k, headers[k])
 		})
 		res.send(body)
