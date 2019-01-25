@@ -14,7 +14,7 @@ app.use((req, res, next) => {
     })
 })
 
-const POOLING_TIMEOUT = 200 * 1000
+const POOLING_TIMEOUT = 80 * 1000
 
 const getRandomId = () => Math.round(Math.random() * 999999999999)
 
