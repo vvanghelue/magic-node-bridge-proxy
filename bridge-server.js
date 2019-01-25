@@ -72,6 +72,14 @@ const requestManager = (() => {
 		}
 	}
 
+	const setAsDone = (id) => {
+		for (let i = 0; i < requestRequests.length; i++) {
+			if (requestRequests[i].id == id) {
+				requestRequests[i].status = 'done'
+			}
+		}
+	}
+
 	const getAll = () => {
 		return requestRequests
 	}
@@ -81,7 +89,8 @@ const requestManager = (() => {
 		getAll,
 		getRequestsToProcess,
 		getRequestById,
-		setAllAsProcessing
+		setAllAsProcessing,
+		setAsDone
 	}
 })()
 
@@ -117,12 +126,12 @@ app.use((req, res, next) => {
 	if (req.originalUrl == '/requests_to_process') {
 		res.set('Access-Control-Allow-Origin', '*')
 		res.json(requestManager.getRequestsToProcess())
-		requestManager.setAllAsProcessing()
+		// requestManager.setAllAsProcessing()
 		return
 	}
 
 	if (req.originalUrl == '/on_request_processed') {
-		console.log(req.body)
+		// console.log(req.body)
 
 		const body = JSON.parse(req.body)
 
@@ -136,6 +145,8 @@ app.use((req, res, next) => {
 			return
 		}
 
+		requestManager.setAsDone(body.id)
+
 		try {
 			requestRequest.callback({
 				headers: body.headers,
@@ -144,10 +155,6 @@ app.use((req, res, next) => {
 		} catch (err) {
 			console.log(err)
 		}
-
-		requestManager.getAll()
-			.filter(r => r.id == body.id)[0]
-			.status = 'processed'
 
 
 		res.set('Access-Control-Allow-Origin', '*')
@@ -160,17 +167,21 @@ app.use((req, res, next) => {
 	// `)
 
 	const callback = ({ headers, body }) => {
-		Object.keys(headers).forEach((k) => {
-			if (k == 'transfer-encoding') {
-				return
-			}
-			if (k == 'content-encoding') {
-				return
-			}
+		try {
+			Object.keys(headers).forEach((k) => {
+				if (k == 'transfer-encoding') {
+					return
+				}
+				if (k == 'content-encoding') {
+					return
+				}
 
-			res.set(k, headers[k])
-		})
-		res.send(body)
+				res.set(k, headers[k])
+			})
+			res.send(body)
+		} catch (err) {
+			console.log('Callback already called')
+		}
 	}
 
 	requestManager.add(
