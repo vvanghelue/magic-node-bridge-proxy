@@ -11,7 +11,7 @@ if (IS_NODE) {
 	bridgeServerUrl = (process.env.BRIDGE_PROXY_URL || 'http://localhost:5099').trim()
 	process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 } else {
-	bridgeServerUrl = 'http://' + location.host
+	bridgeServerUrl = location.protocol + '//' + location.host
 }
 
 const SYNC_INTERVAL = 500 // ms
