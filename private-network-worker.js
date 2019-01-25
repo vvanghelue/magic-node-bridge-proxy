@@ -71,7 +71,7 @@ const loop = (async () => {
 
 			const bodyText = await result.text()
 
-			// console.log(bodyText)
+			// console.log(result.headers)
 
 			await fetch(`${bridgeServerUrl}/on_request_processed`, {
 				method: 'POST',
@@ -88,6 +88,18 @@ const loop = (async () => {
 		} catch(err) {
 			console.log(`Error on requesting ${requestData.url}`)
 			console.log(err)
+
+			await fetch(`${bridgeServerUrl}/on_request_processed`, {
+				method: 'POST',
+				// headers: {
+				// 	'content-type': 'text/plain'
+				// }
+				body: JSON.stringify({
+					body: 'error on fetch',
+					headers: {},
+					id: request.id
+				})
+			})
 		}
 	}
 
